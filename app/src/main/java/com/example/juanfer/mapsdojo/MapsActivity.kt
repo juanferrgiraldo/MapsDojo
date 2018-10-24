@@ -13,6 +13,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -59,14 +60,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             return
         }
-        mMap.isMyLocationEnabled = true  //draw nd center the map on users location
+        mMap.isMyLocationEnabled = true  //draw and center the map on users location
 
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->  //gives the most recent location available
             if (location != null) {
                 lastLocation = location
                 val currentLatLng = LatLng(location.latitude, location.longitude)
+                placeMarkerOnMap(currentLatLng)
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
             }
         }
+    }
+
+    private fun placeMarkerOnMap(location: LatLng) {
+        val markerOptions = MarkerOptions().position(location)  //Sets the current location as position to the marker
+        mMap.addMarker(markerOptions)
     }
 }
